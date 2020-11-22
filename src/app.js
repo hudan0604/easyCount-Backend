@@ -8,8 +8,8 @@ app.use(express.json());
 
 // endpoints
 
+// Add a new dashboard to the dashboards
 app.post('/create-dashboard', (req, res) => {
-    console.log('req.body', req.body);
     const dashboard = new Dashboard(req.body);
     dashboard.save()
         .then(() => {
@@ -18,6 +18,15 @@ app.post('/create-dashboard', (req, res) => {
         .catch((error) => {
                 res.send(error)
         })
+})
+
+// get the list of dashboards
+app.get('/dashboards', (req, res) => {
+    Dashboard.find({}).then((dashboards) => {
+        res.send(dashboards)
+    }).catch((error) => {
+        res.status(500).send()
     })
+})
 
 app.listen('3000', () => console.log('app sucessfully listens brooo'));

@@ -6,8 +6,13 @@ const Dashboard = mongoose.model('Dashboard', {
         required: true,
         trim: true
     },
-    // people: [        
-    // ]
+    creationDate: {
+        type: Date,
+    },
+    people: {
+        type: Array,
+    }       
+    
 })
 
 module.exports = Dashboard;

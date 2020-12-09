@@ -7,7 +7,7 @@ const Dashboard = mongoose.model('Dashboard', {
         trim: true
     },
     creationDate: {
-        type: Date,
+        type: String,
     },
     people: {
         type: Array,

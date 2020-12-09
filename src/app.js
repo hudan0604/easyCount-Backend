@@ -2,9 +2,12 @@ const express = require('express')
 require('./mongoDB/mongoose')
 const Dashboard = require('./mongoDB/models/dashboard.js');
 
-const app = express()
+const cors = require('cors');
 
+const app = express()
 app.use(express.json());
+
+app.options('*', cors());
 
 // endpoints
 
@@ -27,6 +30,14 @@ app.get('/dashboards', (req, res) => {
     }).catch((error) => {
         res.status(500).send()
     })
+})
+
+// delete a dashboard
+app.post('/delete-dashboards', (req, res) => {
+    Dashboard.deleteMany({ _id: { $in: req.body.dashboards } },
+        (error, result) => {
+            error ? res.send(error) : res.send(result)                
+        })
 })
 
 app.listen('3000', () => console.log('app sucessfully listens brooo'));

@@ -32,6 +32,18 @@ app.get('/dashboards', (req, res) => {
     })
 })
 
+app.get('/dashboard/:id', (req, res) => {
+    const _id = req.params.id
+    Dashboard.findById(_id).then((dashboard) => {
+        if (!dashboard) {
+            return res.status(404).send()
+        }
+        res.send(dashboard)
+    }).catch((e) => {
+        res.status(500).send()
+    })
+})
+
 // delete a dashboard
 app.post('/delete-dashboards', (req, res) => {
     Dashboard.deleteMany({ _id: { $in: req.body.dashboards } },

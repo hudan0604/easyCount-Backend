@@ -12,7 +12,6 @@ const Dashboard = mongoose.model('Dashboard', {
     people: {
         type: Array,
     }       
-    
 })
 
 module.exports = Dashboard;

@@ -4,8 +4,10 @@ app.use(express.json());
 const router = new express.Router()
 const Dashboard = require('../mongoDB/models/dashboard');
 
+const auth = require('../middleware/auth');
+
 // Add a new dashboard to the dashboards
-app.post('/create-dashboard', (req, res) => {
+app.post('/create-dashboard', auth, (req, res) => {
     const dashboard = new Dashboard(req.body);
     dashboard.save()
         .then(() => {
@@ -17,7 +19,7 @@ app.post('/create-dashboard', (req, res) => {
 })
 
 // get the list of dashboards
-app.get('/dashboards', (req, res) => {
+app.get('/dashboards', auth, (req, res) => {
     Dashboard.find({}).then((dashboards) => {
         res.send(dashboards)
     }).catch((error) => {
@@ -25,7 +27,7 @@ app.get('/dashboards', (req, res) => {
     })
 })
 
-app.get('/dashboard/:id', (req, res) => {
+app.get('/dashboard/:id', auth, (req, res) => {
     const _id = req.params.id
     Dashboard.findById(_id).then((dashboard) => {
         if (!dashboard) {
@@ -38,7 +40,7 @@ app.get('/dashboard/:id', (req, res) => {
 })
 
 // delete a dashboard
-app.post('/delete-dashboards', (req, res) => {
+app.post('/delete-dashboards', auth, (req, res) => {
     Dashboard.deleteMany({ _id: { $in: req.body.dashboards } },
         (error, result) => {
             error ? res.send(error) : res.send(result)                

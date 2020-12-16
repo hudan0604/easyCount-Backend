@@ -9,7 +9,7 @@ router.post('/users/log-in', async (req, res) => {
         const user = await User.findByCredentials(req.body.email, req.body.password);
         const token = await user.generateAuthToken();
         user.token = token
-        res.send(user);
+        res.send(user.getPublicProfile());
     }
     catch (e) {
         res.status(400).send()
@@ -19,7 +19,6 @@ router.post('/users/log-in', async (req, res) => {
 router.post('/users/logout', auth, async (req, res) => {
     try {
         const user = req.user;
-        delete user.token;
         await user.save()
         res.send(user)
     }

@@ -36,11 +36,29 @@ const userSchema = new mongoose.Schema({
     }    
 })
 
+userSchema.methods.getPublicProfile = function () {
+    const user = this
+    const userObject = user.toObject()
+
+    delete userObject.password
+
+    return userObject
+}
+
 userSchema.methods.generateAuthToken = async function () {
     const user = this
     const token = jwt.sign({ _id: user._id.toString() }, 'thisismynewcourse')
     await user.save()
     return token
+}
+
+userSchema.methods.getUserWithoutToken = function () {
+    const user = this
+    const userObject = user.toObject()
+
+    delete userObject.token
+
+    return userObject
 }
 
 userSchema.pre('save', async function (next) {

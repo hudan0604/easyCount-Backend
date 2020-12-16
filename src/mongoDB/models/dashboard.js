@@ -8,10 +8,17 @@ const Dashboard = mongoose.model('Dashboard', {
     },
     creationDate: {
         type: String,
+    },    
+    dashboardCreator: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     },
-    people: {
-        type: Array,
-    }       
+    // here put the ids of the users wishing to join the activity
+    people: [{
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
+    }]       
 })
 
 module.exports = Dashboard;

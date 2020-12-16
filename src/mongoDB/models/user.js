@@ -3,6 +3,8 @@ const bcrypt = require('bcryptjs')
 const validator = require('validator')
 const jwt = require('jsonwebtoken')
 
+const Dashboard = require('./dashboard')
+
 const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
@@ -52,21 +54,20 @@ userSchema.methods.generateAuthToken = async function () {
     return token
 }
 
-userSchema.methods.getUserWithoutToken = function () {
-    const user = this
-    const userObject = user.toObject()
-
-    delete userObject.token
-
-    return userObject
-}
-
 userSchema.pre('save', async function (next) {
     const user = this
     if (user.isModified('password')) {
       user.password = await bcrypt.hash(user.password, 8)
     } 
   next()  
+})
+
+// Delete user dashboards when user chooses to close his account
+userSchema.pre('remove', async function (next) {
+    const user = this
+    await Dashboard.deleteMany({dashboardCreator: user._id})
+
+    next()  
 })
 
 userSchema.statics.findByCredentials = async (email, password) => {

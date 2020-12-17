@@ -28,14 +28,18 @@ router.post('/users/logout', auth, async (req, res) => {
 })
 
 router.post('/create-user', async (req, res) => {
-    const user = await new User(req.body)
-    user.save()
-        .then(() => {
-            res.send(user)
-        })
-        .catch((error) => {
-                res.send(error)
-        })
+    if (User.findOne({ email: req.body.email })) {
+        res.status(409).send({ reason: 'This email address is already used by an existing user !!!' })
+    } else {
+        const user = await new User(req.body)
+        user.save()
+            .then(() => {
+                res.send(user)
+            })
+            .catch((error) => {
+                res.status(400).send(error)
+            })
+    }
 })
 
 router.get('/users/me', auth, async (req, res) => {

@@ -42,7 +42,7 @@ router.get('/dashboard/:id', auth, async (req, res) => {
     res.send(dashboard)
 })
 
-// delete a dashboard
+// delete one or many dashboards
 router.post('/delete-dashboards', auth, (req, res) => {
     Dashboard.deleteMany({ _id: { $in: req.body.dashboards } },
         (error, result) => {

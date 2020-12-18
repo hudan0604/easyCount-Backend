@@ -28,7 +28,8 @@ router.post('/users/logout', auth, async (req, res) => {
 })
 
 router.post('/create-user', async (req, res) => {
-    if (User.findOne({ email: req.body.email })) {
+    const userToCheck = await User.findOne({ email: req.body.email })
+    if (userToCheck) {
         res.status(409).send({ reason: 'This email address is already used by an existing user !!!' })
     } else {
         const user = await new User(req.body)

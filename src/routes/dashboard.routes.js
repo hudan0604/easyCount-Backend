@@ -21,9 +21,19 @@ router.post('/create-dashboard', auth, async (req, res) => {
     }
 })
 
-// get the list of dashboards of THE AUTH USER
+// get the list of dashboards where user is involved 
+// (either he created one or he joined some dashboards)
 router.get('/dashboards', auth, (req, res) => {
     Dashboard.find({people: req.user._id}).then((dashboards) => {
+        res.send(dashboards)
+    }).catch((error) => {
+        res.status(500).send()
+    })
+})
+
+// get the list of dashboards that the auth user has created
+router.get('/dashboards-created', auth, (req, res) => {
+    Dashboard.find({dashboardCreator: req.user._id}).then((dashboards) => {
         res.send(dashboards)
     }).catch((error) => {
         res.status(500).send()
@@ -40,6 +50,20 @@ router.get('/dashboard/:id', auth, async (req, res) => {
         return res.status(404).send()
     }
     res.send(dashboard)
+})
+
+// Add a newly signed in user to an existing dashboard
+router.patch('/add-user-to-dashboard/:id', async (req, res) => {
+    try {
+        const dashboard = await Dashboard.findByIdAndUpdate(req.params.id, { $addToSet: { people: req.body.userId } }, {new: true})
+        if (!dashboard) {
+            return res.status(404).send()
+        }
+        res.send(dashboard);
+    }
+    catch (e) {
+        res.status(400).send(e)
+    }
 })
 
 // delete one or many dashboards

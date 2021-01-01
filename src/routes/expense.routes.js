@@ -20,8 +20,7 @@ router.post('/expense/add', auth, async (req, res) => {
 router.get('/expenses/:dashboardId', auth, async (req, res) => {
     try {
         const dashboardId = req.params.dashboardId
-        const expenses = await Expense.find({ dashboardId });
-        await expenses.forEach(expense => expense.populate('paiedBy').execPopulate())
+        const expenses = await Expense.find({ dashboardId }).populate('paiedBy');
         if (!expenses) {console.log('no expenses found for the dashboard')}
         res.send(expenses)
     }

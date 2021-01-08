@@ -16,4 +16,4 @@ app.use(expenseRoutes);
 
 app.options('*', cors());
 
-app.listen('3000', () => console.log('app sucessfully listens brooo'));
+app.listen(process.env.PORT, () => console.log('app sucessfully listens brooo'));
